@@ -75,9 +75,13 @@ public static class UnityTools {
 		string stringData = string.Format("{0}: {1}\n", title, array.Length);
 		for (int i = 0; i < array.Length; i++) {
 			if (array[i] != null) {
-				stringData += "," + array[i].ToString();
+				if (i != 0) {
+					stringData += ",";
+				}
+				stringData += array[i].ToString();
 			}
 		}
+		stringData += "\n";
 		Debug.Log(stringData);
 	}
 
