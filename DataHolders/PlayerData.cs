@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class PlayerData {
+	
+	public static PlayerData Instance;
 
 	public string Username;
 	public string Password;
@@ -15,6 +18,21 @@ public class PlayerData {
 
 	protected Dictionary<string, List<PlayerDataItem>> mInventory = new Dictionary<string, List<PlayerDataItem>>();
 
+#if !BASE_NETWORKING
+	public delegate void OnCurrencyAdjust(string currency, int value, Transform Location);
+	public event OnCurrencyAdjust CurrencyAdjust;
+	
+	public static void CreateLocalPlayerData() {
+		Instance = new PlayerData();
+		Instance.Init();
+	}
+	
+	public void ClientAdjustVirtualCurrencyAmount(string vc, int amount, Transform loc) {
+		AdjustVirtualCurrencyAmount(vc, amount);
+		CurrencyAdjust?.Invoke(vc, amount, loc);
+	}
+#endif
+	
 	public virtual void Init() {
 		Username = "";
 		Password = "";
