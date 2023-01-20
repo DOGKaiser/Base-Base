@@ -41,6 +41,23 @@ public static class Tools {
 		return Activator.CreateInstance(t);
 	}
 
+	public static void CallStaticFunctionOfClass(string assemblyName, string className, string methodName) {
+		Assembly assembly = Assembly.Load( assemblyName );
+		if (assembly == null) {
+			Debug.LogWarning("No Assembly by name "+ assemblyName);
+		}
+		
+		Type type = assembly?.GetType(className);
+		if (type == null) {
+			Debug.LogWarning("No Class by name "+ className);
+		}
+		MethodInfo method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public);
+		if (method == null) {
+			Debug.LogWarning($"Class {className} does not have the method {methodName}");
+		}
+		method?.Invoke(null, null);
+	}
+
 	public static bool TimerReady(DateTime timeStarted, TimeSpan timeToWait) {
 		TimeSpan timeSinceStarted = DateTime.UtcNow.Subtract(timeStarted);
 

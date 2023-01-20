@@ -28,6 +28,7 @@ public class DataHolderClass {
 		mPlayerData = pData;
 		int holderMapIndex;
 		DataHolderGameData.Instance.getPlayerDataHolderMapLoc(map, out holderMapIndex);
+		if (holderMapIndex == -1) { return; }
 		PlayerDataHolderMap holderMap = DataHolderGameData.Instance.getPlayerDataHolderMaps()[holderMapIndex];
 
 		List<PlayerDataHolder> pDatas = DataHolderGameData.Instance.getPlayerDataHolders();
@@ -44,6 +45,7 @@ public class DataHolderClass {
 		mPlayerData = pData;
 		int holderMapIndex;
 		DataHolderGameData.Instance.getPlayerDataHolderMapLoc(map, out holderMapIndex);
+		if (holderMapIndex == -1) { return; }
 		PlayerDataHolderMap holderMap = DataHolderGameData.Instance.getPlayerDataHolderMaps()[holderMapIndex];
 
 		List<PlayerDataHolder> pDatas = DataHolderGameData.Instance.getPlayerDataHolders();
