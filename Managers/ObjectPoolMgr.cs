@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEditorInternal.ReorderableList;
 
 public class ObjectPoolMgr {
 	private static readonly ObjectPoolMgr instance = new ObjectPoolMgr();
