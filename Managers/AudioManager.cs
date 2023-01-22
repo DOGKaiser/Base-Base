@@ -12,6 +12,8 @@ public class AudioManager : MonoBehaviour {
     static AudioManager instance;
 
     GameObject mAudioObject;
+    
+    Dictionary<string, AudioSource> mAudiosLooping = new Dictionary<string, AudioSource>();
 
     List<AudioSource> mAudios = new List<AudioSource>();
     AudioSource mMusic;
@@ -137,6 +139,35 @@ public class AudioManager : MonoBehaviour {
 
     public void PlayClip(AudioClip audioClip) {
         PlayClip(audioClip, 1);
+    }
+
+    public void PlayLoopingClip(string audioId, AudioClip audioClip, float volume) {
+        if (mMuteSound)
+            return;
+
+        if (audioClip != null) {
+            AudioSource newAudio;
+            if (mAudiosLooping.ContainsKey(audioId)) {
+                newAudio = mAudiosLooping[audioId];
+            } 
+            else {
+                GameObject obj = ObjectPoolMgr.Instance.GetObject(mAudioObject, transform);
+                newAudio = obj.GetComponent<AudioSource>();
+                mAudiosLooping.Add(audioId, newAudio);
+            }
+            newAudio.clip = audioClip;
+            newAudio.volume = mSoundVolume * volume;
+            newAudio.loop = true;
+            newAudio.Play();
+        }
+    }
+
+    public void StopLoopingClip(string audioId) {
+        if (mAudiosLooping.ContainsKey(audioId)) {
+            mAudiosLooping[audioId].Stop();
+            ObjectPoolMgr.Instance.ReuseObject(mAudioObject, mAudiosLooping[audioId].gameObject);
+            mAudiosLooping.Remove(audioId);
+        }
     }
 
     public void ToggleSound() {
