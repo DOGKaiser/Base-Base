@@ -18,7 +18,6 @@ public class PlayerData {
 
 	protected Dictionary<string, List<PlayerDataItem>> mInventory = new Dictionary<string, List<PlayerDataItem>>();
 
-#if !BASE_NETWORKING
 	public delegate void OnCurrencyAdjust(string currency, int value, Transform Location);
 	public event OnCurrencyAdjust CurrencyAdjust;
 	
@@ -27,11 +26,10 @@ public class PlayerData {
 		Instance.Init();
 	}
 	
-	public void ClientAdjustVirtualCurrencyAmount(string vc, int amount, Transform loc) {
+	public virtual void ClientAdjustVirtualCurrencyAmount(string vc, int amount, Transform loc) {
 		AdjustVirtualCurrencyAmount(vc, amount);
 		CurrencyAdjust?.Invoke(vc, amount, loc);
 	}
-#endif
 	
 	public virtual void Init() {
 		Username = "";

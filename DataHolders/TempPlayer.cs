@@ -48,46 +48,12 @@ public class TempPlayer {
 		return count;
 	}
 
-	void ResetPartyIDs() {
+	public void ResetPartyIDs() {
 		for (int i = 0; i < partyIDs.Length; i++) {
 			partyIDs[i] = 0;
 		}
 	}
 
-#if BASE_NETWORKING
-	public void LeaveParty(int index) {
-		int[] oldParty = new int[4];
-		partyIDs.CopyTo(oldParty, 0); 
-
-		for (int i = 0; i < oldParty.Length; i++) {
-			if (index == oldParty[i]) {
-				if (i == 0) {
-					// Was Host, remove all or change host
-					for (int j = 0; j < oldParty.Length; j++) {
-						if (oldParty[j] != 0)
-							ServerApplication.NetworkServer.TempPlayers[oldParty[j]].ResetPartyIDs();
-					}
-				}
-				else {
-					for (int j = 0; j < oldParty.Length; j++) {
-						if (oldParty[j] != 0)
-							ServerApplication.NetworkServer.TempPlayers[oldParty[j]].partyIDs[i] = 0;
-					}
-				}
-				break;
-			}
-		}
-
-		for (int i = 0; i < oldParty.Length; i++) {
-			if (oldParty[i] != 0) {
-				ServerApplication.ServerSendData.Instance.SendPartyInfo(oldParty[i]);
-			}
-		}
-
-		ResetPartyIDs();
-	}
-#endif
-	
 	public int GetPlayerChoice() { return PlayerChoice; } // Return true if not a player
 	public int GetPlayerOptions() { return PlayerOptions; } // Return true if not a player
 	public void SetPlayerChoice(int choice) { 
