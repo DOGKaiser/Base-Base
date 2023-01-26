@@ -15,9 +15,8 @@ public class ObjectPoolMgr {
 
 	public bool IsLoaded(string path) {
 		GameObject loadedObject;
-		mLoadedObject.TryGetValue(path, out loadedObject);
-
-		if (loadedObject == null) {
+		
+		if (!mLoadedObject.TryGetValue(path, out loadedObject)) {
 			return false;
 		}
 
@@ -26,9 +25,8 @@ public class ObjectPoolMgr {
 
 	GameObject LoadObject(string path) {
 		GameObject loadedObject;
-		mLoadedObject.TryGetValue(path, out loadedObject);
 
-		if (loadedObject == null) {
+		if (!mLoadedObject.TryGetValue(path, out loadedObject)) {
 			loadedObject = Resources.Load<GameObject>(path);
 
 			mLoadedObject.Add(path, loadedObject);
@@ -37,8 +35,8 @@ public class ObjectPoolMgr {
 
 		return loadedObject;
 	}
-
-	public GameObject GetObject(string path, Transform parent) {
+	
+	public GameObject GetObject(string path, Transform parent = null) {
 		GameObject prefab;
 		if (mLoadedObject.ContainsKey(path)) {
 			prefab = mLoadedObject[path];
@@ -47,15 +45,18 @@ public class ObjectPoolMgr {
 			prefab = LoadObject(path);
 		}
 
-		return GetObject(prefab, parent);
+		if (parent) {
+			GetObject(prefab, parent);
+		}
+
+		return GetObject(prefab);
 	}
 
 	public void ReuseObject(string path, GameObject createdObj) {
 		createdObj.SetActive(false);
 		GameObject prefab;
-		mLoadedObject.TryGetValue(path, out prefab);
 
-		if (prefab == null)
+		if (!mLoadedObject.TryGetValue(path, out prefab))
 			return;
 
 		ReuseObject(prefab, createdObj);
