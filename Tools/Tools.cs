@@ -41,6 +41,20 @@ public static class Tools {
 		return Activator.CreateInstance(t);
 	}
 
+	public static List<Type> GetAllInheritorsOfType<T>(params object[] constructorArgs) where T : class {
+		List<Type> types = new List<Type>();
+		Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+		Type interfaceType = typeof(T);
+		foreach (Assembly assembly in assemblies) {
+			// Get the types in the assembly that implement the interface
+			IEnumerable<Type> typesAssembly = assembly.GetTypes().Where(type => interfaceType.IsAssignableFrom(type) && type != interfaceType);
+
+			types.AddRange(typesAssembly);
+		}
+		
+		return types;
+	}
+
 	public static void CallStaticFunctionOfClass(string assemblyName, string className, string methodName) {
 		Assembly assembly = Assembly.Load( assemblyName );
 		if (assembly == null) {
