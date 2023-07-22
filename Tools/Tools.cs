@@ -38,7 +38,11 @@ public static class Tools {
 		if (!mAssemblies.TryGetValue(className, out Type t)) {
 			t = GetEnumerableOfType(className);
 		}
-		return Activator.CreateInstance(t);
+		return GetInstance(t);
+	}
+	
+	public static object GetInstance(Type type) {
+		return Activator.CreateInstance(type);
 	}
 
 	public static List<Type> GetAllInheritorsOfType<T>(params object[] constructorArgs) where T : class {

@@ -19,7 +19,7 @@ public class StateMachineStack : StateMachine {
 		}
 	}
 
-	public void PopState() {
+	public void PopState(IState nextState = null) {
 		int stateCount = nextStates.Count;
 
 		if (nextStates.Count > 0) {
@@ -29,7 +29,10 @@ public class StateMachineStack : StateMachine {
 			currentState.Exit();
 		}
 
-		if (nextStates.Count > 0) {
+		if (nextState != null) {
+			AddState(nextState);
+		}
+		else if (nextStates.Count > 0) {
 			currentState = nextStates[nextStates.Count - 1];
 
 			if (stateCount == nextStates.Count)
