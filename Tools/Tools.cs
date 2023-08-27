@@ -186,4 +186,13 @@ public static class Tools {
 
 		return num;
 	}
+
+	public static bool DoesFirstArrayContainAllInSecondArray<T>(T[] arrayA, T[] arrayB) {
+		foreach (T t in arrayB) {
+			if (!arrayA.Contains(t)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
