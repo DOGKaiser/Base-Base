@@ -61,7 +61,7 @@ public class TempPlayer {
 		ChoiceSelection?.Invoke(this, choice);
 	}
 	public void SetPlayerOptions(int options) { PlayerOptions = options; }
-	public void ResetPlayerChoice() { PlayerChoice = 0; }
+	public void ResetPlayerChoice() { PlayerChoice = (int)kTempPlayerChoices.NotReady; }
 	public bool IsPlayerAI() { return PlayerIndex == 0; }
 
 	public void RollAISeed() { AISeed = UnityEngine.Random.Range(1, int.MaxValue); }
@@ -119,5 +119,10 @@ public class TempPlayer {
 		set {
 			mInMatch = value;
 		}
+	}
+	
+	public enum kTempPlayerChoices {
+		NotReady = -1,
+		Ready
 	}
 }
