@@ -37,11 +37,7 @@ public class ObjectPoolMgr {
 	}
 	
 	public GameObject GetObject(string path, Transform parent = null) {
-		GameObject prefab;
-		if (mLoadedObject.ContainsKey(path)) {
-			prefab = mLoadedObject[path];
-		}
-		else {
+		if (!mLoadedObject.TryGetValue(path, out GameObject prefab)) {
 			prefab = LoadObject(path);
 		}
 
@@ -52,6 +48,14 @@ public class ObjectPoolMgr {
 		return GetObject(prefab);
 	}
 
+	public GameObject GetObject(GameObject prefab) {
+		return GetObject(prefab, prefab.transform.localPosition, prefab.transform.localRotation, null);
+	}
+
+	public GameObject GetObject(GameObject prefab, Transform parent) {
+		return GetObject(prefab, parent.position + prefab.transform.localPosition, Quaternion.LookRotation(parent.forward) * Quaternion.LookRotation(prefab.transform.forward), parent);
+	}
+	
 	public void ReuseObject(string path, GameObject createdObj) {
 		createdObj.SetActive(false);
 		GameObject prefab;
@@ -62,37 +66,20 @@ public class ObjectPoolMgr {
 		ReuseObject(prefab, createdObj);
 	}
 
-	public async void ReuseObject(GameObject prefab, GameObject createdObj) {
+	public async Task ReuseObject(GameObject prefab, GameObject createdObj) {
 		createdObj.SetActive(false);
-		Queue<GameObject> createdObjects;
-		mCreatedObjects.TryGetValue(prefab.GetInstanceID(), out createdObjects);
-
-		if (createdObjects != null) {
-			Task task = Task.Run(() => {
-				System.Threading.Thread.Sleep(100);
-				createdObjects.Enqueue(createdObj);
-			});
-			await Task.WhenAll(task);
+		
+		if (mCreatedObjects.TryGetValue(prefab.GetInstanceID(), out Queue<GameObject> createdObjects)) {
+			await Task.Delay(100);
+			createdObjects.Enqueue(createdObj);
 		}
 	}
 
-	public GameObject GetObject(GameObject prefab) {
-		return GetObject(prefab, prefab.transform.localPosition, prefab.transform.localRotation, null);
-	}
-
-	public GameObject GetObject(GameObject prefab, Transform parent) {
-		return GetObject(prefab, parent.position + prefab.transform.localPosition, Quaternion.LookRotation(parent.forward) * Quaternion.LookRotation(prefab.transform.forward), parent);
-	}
-
-		// Object already loaded
 	public GameObject GetObject(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent) {
-		Queue<GameObject> createdObjects;
-		int id = prefab.GetInstanceID();
-		mCreatedObjects.TryGetValue(id, out createdObjects);
-
-		//		Debug.LogWarning("Loaded: " + mCreatedObjects.Count + " Created: " + objCount);
 		
-		if (createdObjects != null) {
+		int id = prefab.GetInstanceID();
+		
+		if (mCreatedObjects.TryGetValue(id, out Queue<GameObject> createdObjects)) {
 			while (createdObjects.Count > 0) {
 				GameObject obj = createdObjects.Dequeue();
 				if (obj != null) {
@@ -104,13 +91,13 @@ public class ObjectPoolMgr {
 				}
 			}
 		}
-		else {
-			createdObjects = new Queue<GameObject>();
-			mCreatedObjects.Add(id, createdObjects);
-		}
 
 		GameObject poolObject = GameObject.Instantiate(prefab, position, rotation, parent);
 		poolObject.name = poolObject.name.Replace("(Clone)", "");
+		
+		if (!mCreatedObjects.ContainsKey(id)) {
+			mCreatedObjects.Add(id, new Queue<GameObject>());
+		}
 		
 		return poolObject;
 	}
