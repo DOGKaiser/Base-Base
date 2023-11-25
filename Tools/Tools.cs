@@ -195,4 +195,13 @@ public static class Tools {
 		}
 		return true;
 	}
+	
+	public static bool IsAnyOfListInFirstInSecond<T>(T[] arrayA, T[] arrayB) {
+		foreach (T t in arrayB) {
+			if (arrayA.Contains(t)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
