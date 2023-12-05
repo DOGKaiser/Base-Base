@@ -15,7 +15,7 @@ public class PlayerDataHolderMapEditor : Editor {
 	public override void OnInspectorGUI() {
 		base.OnInspectorGUI();
 
-		List<PlayerDataHolder> playerDataHolders = (List<PlayerDataHolder>)Tools.GetEnumerableOfType<PlayerDataHolder>();
+		List<PlayerDataHolder> playerDataHolders = (List<PlayerDataHolder>)BaseTools.GetEnumerableOfType<PlayerDataHolder>();
 
 		List<string> templateNames = new List<string>();
 		templateNames.Add("");

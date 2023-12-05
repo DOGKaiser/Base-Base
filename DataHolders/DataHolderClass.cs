@@ -18,7 +18,7 @@ public class DataHolderClass {
 		List<PlayerDataHolder> pDatas = DataHolderGameData.Instance.getPlayerDataHolders();
 
 		for (int i = 0; i < pDatas.Count; i++) {
-			PlayerDataHolder newHolder = (PlayerDataHolder)Tools.GetInstance(pDatas[i].ToString());
+			PlayerDataHolder newHolder = (PlayerDataHolder)BaseTools.GetInstance(pDatas[i].ToString());
 			newHolder.InitData(this);
 		}
 	}
@@ -35,7 +35,7 @@ public class DataHolderClass {
 
 		for (int i = 0; i < pDatas.Count; i++) {
 			if (holderMap.Holders.Contains(pDatas[i].GetHolderString())) {
-				PlayerDataHolder newHolder = (PlayerDataHolder)Tools.GetInstance(pDatas[i].ToString());
+				PlayerDataHolder newHolder = (PlayerDataHolder)BaseTools.GetInstance(pDatas[i].ToString());
 				newHolder.InitData(this);
 			}
 		}
@@ -53,7 +53,7 @@ public class DataHolderClass {
 
 		for (int i = 0; i < pDatas.Count; i++) {
 			if (holderMap.Holders.Contains(pDatas[i].GetHolderString())) {
-				PlayerDataHolder newHolder = (PlayerDataHolder)Tools.GetInstance(pDatas[i].ToString());
+				PlayerDataHolder newHolder = (PlayerDataHolder)BaseTools.GetInstance(pDatas[i].ToString());
 				newHolder.InitAIData(currentPlayers, this);
 			}
 		}
