@@ -66,13 +66,14 @@ public class ObjectPoolMgr {
 		ReuseObject(prefab, createdObj);
 	}
 
-	public async Task ReuseObject(GameObject prefab, GameObject createdObj) {
+	public void ReuseObject(GameObject prefab, GameObject createdObj) {
 		createdObj.SetActive(false);
 		
-		if (mCreatedObjects.TryGetValue(prefab.GetInstanceID(), out Queue<GameObject> createdObjects)) {
-			await Task.Delay(100);
-			createdObjects.Enqueue(createdObj);
-		}
+		Task.Delay(100).ContinueWith(o => {
+			if (mCreatedObjects.TryGetValue(prefab.GetInstanceID(), out Queue<GameObject> createdObjects)) {
+				createdObjects.Enqueue(createdObj);
+			}
+		});
 	}
 
 	public GameObject GetObject(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent) {

@@ -27,11 +27,11 @@ public class GameDataScriptableObject<T> where T : ScriptableObject {
 		return _array[GetRandomKey()];
 	}
 	
-	protected Dictionary<string, T> MakeConfigDictionary<T>(string debugLog, string loc = "") where T : ScriptableObject {
-		Dictionary<string, T> dic = new Dictionary<string, T>();
-		T[] array = Resources.LoadAll<T>(loc);
-		UnityTools.DataLogs<T>(array.ToArray(), debugLog);
-		foreach (T t in array) {
+	protected Dictionary<string, TConfig> MakeConfigDictionary<TConfig>(string debugLog, string loc = "") where TConfig : ScriptableObject {
+		Dictionary<string, TConfig> dic = new Dictionary<string, TConfig>();
+		TConfig[] array = Resources.LoadAll<TConfig>(loc);
+		UnityTools.DataLogs(array.ToArray(), debugLog);
+		foreach (TConfig t in array) {
 			dic.Add(t.name, t);
 		}
 		return dic;
