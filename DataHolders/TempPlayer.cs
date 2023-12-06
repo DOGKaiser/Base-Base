@@ -109,7 +109,10 @@ public class TempPlayer {
 
 	public DataHolderClass GetDataHolderClass() { return TempDataHolder; }
 
-	public int GetPlayerIndex() { return PlayerIndex; }
+	
+	public int GetPlayerSlot() { return PlayerIndex; }
+
+	public int GetPlayerServerIndex() { return PlayerIndex; }
 	public void SetPlayerIndex(int index) { PlayerIndex = index; }
 
 	public bool InMatch {

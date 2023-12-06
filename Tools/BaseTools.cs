@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
-using System;
 using System.Linq;
 using System.IO;
+using System.IO.Compression;
 using UnityEngine;
 
-public static class Tools {
+public static class BaseTools {
 
 	static Dictionary<string, Type> mAssemblies = new Dictionary<string, Type>();
 
-	static Tools() { }
+	static BaseTools() { }
 
 	public static IEnumerable<T> GetEnumerableOfType<T>(params object[] constructorArgs) where T : class/*, IComparable<T>*/ {
 		List<T> objects = new List<T>();
@@ -203,5 +204,21 @@ public static class Tools {
 			}
 		}
 		return false;
+	}
+	
+	public static void CreateEntryFromAny(this ZipArchive archive, string sourceName, string entryName = "") {
+		string fileName = Path.GetFileName(sourceName);
+		if (File.GetAttributes(sourceName).HasFlag(FileAttributes.Directory)) {
+			archive.CreateEntryFromDirectory(sourceName, Path.Combine(entryName, fileName));
+		} else {
+			archive.CreateEntryFromFile(sourceName, Path.Combine(entryName, fileName));
+		}
+	}
+
+	public static void CreateEntryFromDirectory(this ZipArchive archive, string sourceDirName, string entryName = "") {
+		string[] files = Directory.GetFiles(sourceDirName).Concat(Directory.GetDirectories(sourceDirName)).ToArray();
+		foreach (string file in files) {
+			archive.CreateEntryFromAny(file, entryName);
+		}
 	}
 }
