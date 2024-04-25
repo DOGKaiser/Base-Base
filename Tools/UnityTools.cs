@@ -22,14 +22,14 @@ public static class UnityTools {
 	}
 
 	public static void ShuffleArray<T>(ref List<T> array, int seed = -1) {
-		for (int i = array.Count - 1; i >= 0; --i) {
-			if (seed != -1)
-				UnityEngine.Random.InitState(seed);
+		if (seed != -1) {
+			UnityEngine.Random.InitState(seed);
+		}
+
+		for (int i = array.Count - 1; i > 0; --i) {
 			int j = UnityEngine.Random.Range(0, i + 1);
 
-			T tmp = array[i];
-			array[i] = array[j];
-			array[j] = tmp;
+			(array[i], array[j]) = (array[j], array[i]);
 		}
 	}
 

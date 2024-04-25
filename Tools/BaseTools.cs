@@ -47,6 +47,11 @@ public static class BaseTools {
 	}
 
 	public static List<Type> GetAllInheritorsOfType<T>(params object[] constructorArgs) where T : class {
+		return AppDomain.CurrentDomain.GetAssemblies()
+			.SelectMany(a => a.GetTypes())
+			.Where(t => typeof(T).IsAssignableFrom(t) && t != typeof(T))
+			.ToList();
+		/*
 		List<Type> types = new List<Type>();
 		Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 		Type interfaceType = typeof(T);
@@ -58,6 +63,7 @@ public static class BaseTools {
 		}
 		
 		return types;
+		*/
 	}
 
 	public static void CallStaticFunctionOfClass(string assemblyName, string className, string methodName) {
@@ -87,20 +93,14 @@ public static class BaseTools {
 	}
 
     public static void WriteToFile(string file, string text, bool writeIfFileExists) {
-        string path = file;
-        StreamWriter writer;
-        if (!File.Exists(path)) {
-            writer = File.CreateText(path);
+        if (!writeIfFileExists && File.Exists(file)) {
+	        return;
         }
-        else {
-            if (!writeIfFileExists)
-                return;
-
-            writer = new StreamWriter(path, true);
+        
+        using (StreamWriter writer = File.AppendText(file))
+        {
+	        writer.WriteLine(text);
         }
-
-        writer.WriteLine(text);
-        writer.Close();
     }
 
     public static void StackDeleteMid<T>(Stack<T> st, T n) {
@@ -123,69 +123,16 @@ public static class BaseTools {
     }
 
 	public static string FormatMilliSecondsToString(double milliseconds, int precision = 2) {
-		string num = "";
+		var timeSpan = TimeSpan.FromMilliseconds(milliseconds);
+		var parts = new[]
+		{
+			$"{timeSpan.Days} day{(timeSpan.Days > 1 ? "s" : "")}",
+			$"{timeSpan.Hours} hr{(timeSpan.Hours > 1 ? "s" : "")}",
+			$"{timeSpan.Minutes} min{(timeSpan.Minutes > 1 ? "s" : "")}",
+			$"{timeSpan.Seconds} sec{(timeSpan.Seconds > 1 ? "s" : "")}"
+		};
 
-		int precise = 0;
-		double time = milliseconds;
-
-		double days = Math.Floor((time / (1000 * 60 * 60 * 24)));
-		if (days > 0) {
-			time -= days * 1000 * 60 * 60 * 24;
-			if (precise > 0)
-				num += " ";
-			num += days + " day";
-			if (days > 1)
-				num += "s";
-
-			precise++;
-		}
-		if (precise >= precision)
-			return num;
-
-		double hours = Math.Floor(time / (1000 * 60 * 60));
-		if (hours > 0) {
-			time -= hours * 1000 * 60 * 60;
-			if (precise > 0)
-				num += " ";
-			num += hours + " hr";
-			if (hours > 1)
-				num += "s";
-
-			precise++;
-		}
-		if (precise >= precision)
-			return num;
-
-		double minutes = Math.Floor(time / (1000 * 60));
-		if (minutes > 0) {
-			time -= minutes * 1000 * 60;
-			if (precise > 0)
-				num += " ";
-			num += minutes + " min";
-			if (minutes > 1)
-				num += "s";
-
-			precise++;
-		}
-		if (precise >= precision)
-			return num;
-
-		double seconds = Math.Floor(time / (1000));
-		if (seconds > 0) {
-			time -= seconds * 1000;
-			if (precise > 0)
-				num += " ";
-			num += seconds + " sec";
-			if (seconds > 1)
-				num += "s";
-
-			precise++;
-		}
-		if (precise >= precision)
-			return num;
-
-
-		return num;
+		return string.Join(" ", parts.Where(p => !p.StartsWith("0 ")).Take(precision));
 	}
 
 	public static bool IsAllOfListInFirstInSecond<T>(T[] arrayA, T[] arrayB) {
