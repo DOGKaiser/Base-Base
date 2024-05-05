@@ -3,33 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ArrayWithFreeIndex<T> where T : new() {
-	T[] array;
-	Queue<int> freeIndexs;
-	
-	public ArrayWithFreeIndex(int size) {
-		array = new T[size];
-		freeIndexs = new Queue<int>();
-
-		for (int i = 0; i < size; i++) {
-			freeIndexs.Enqueue(i);
-		}
-	}
+	List<T> array = new List<T>();
+	List<int> freeIndexs = new List<int>();
 
 	public void FreeIndex(int index) {
 		array[index] = default(T);
-		freeIndexs.Enqueue(index);
+		freeIndexs.Add(index);
 	}
 
-	public int GetNextFreeIndex() {
-		return freeIndexs.Dequeue();
+	public int SetNextFreeIndex(T value) {
+		int index;
+		if (freeIndexs.Count == 0) {
+			index = array.Count;
+			array.Add(value);
+		} 
+		else {
+			index = freeIndexs[0];
+			freeIndexs.RemoveAt(0);
+			array[index] = value;
+		}
+		
+		return index;
+	}
+	
+	public void SetIndex(T value, int index) {
+		if (freeIndexs.Contains(index)) {
+			freeIndexs.Remove(index);
+		}
+		
+		while (array.Count <= index) {
+			freeIndexs.Add(array.Count);
+			array.Add(default(T));
+		}
+		array[index] = value;
 	}
 	
 	public T this[int index] {
 		get {
 			return array[index];
 		}
-		set {
-			array[index] = value;
+	}
+	
+	public int Count {
+		get {
+			return array.Count; 
 		}
 	}
 }
