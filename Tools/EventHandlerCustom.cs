@@ -24,6 +24,7 @@ public class EventHandlerCustom {
 			
 			if (_subscriberCount == 0) {
 				EventsEmpty?.Invoke(this, EventArgs.Empty);
+				EventsEmpty = null;
 			}
 		}
 	}
@@ -35,8 +36,14 @@ public class EventHandlerCustom {
 	}
 
 	// Method to raise the event
-	public void RaiseEvent(object sender, EventArgs e)
+	public void RaiseEvent(object sender, EventArgs e, EventHandler EventsEmptyAction = null)
 	{
 		_eventHandler?.Invoke(sender, e);
+		EventsEmpty += EventsEmptyAction;
+
+		if (GetSubscriberCount() == 0) {
+			EventsEmpty?.Invoke(this, e);
+			EventsEmpty = null;
+		}
 	}
 }
