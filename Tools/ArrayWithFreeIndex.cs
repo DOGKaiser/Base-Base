@@ -30,12 +30,17 @@ public class ArrayWithFreeIndex<T> where T : new() {
 		if (freeIndexs.Contains(index)) {
 			freeIndexs.Remove(index);
 		}
-		
-		while (array.Count < index) {
-			freeIndexs.Add(array.Count);
-			array.Add(default(T));
+
+		if (array.Count <= index) {
+			while (array.Count < index) {
+				freeIndexs.Add(array.Count);
+				array.Add(default(T));
+			}
+			array.Add(value);
+		} 
+		else {
+			array[index] = value;
 		}
-		array.Add(value);
 	}
 	
 	public T this[int index] {
