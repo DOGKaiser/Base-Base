@@ -4,7 +4,7 @@ public class EventHandlerCustom {
 
 	private EventHandler _eventHandler;
 	
-	public EventHandler EventsEmpty;
+	public EventHandler OnEventsEmpty;
 
 	// Counter to keep track of the number of subscribers
 	private int _subscriberCount = 0;
@@ -21,8 +21,7 @@ public class EventHandlerCustom {
 		remove {
 			_eventHandler -= value;
 			_subscriberCount--;
-			
-			CheckIfSubscribersFinished();
+			SubscriberFinished();
 		}
 	}
 
@@ -36,10 +35,15 @@ public class EventHandlerCustom {
 	}
 
 	// Method to raise the event
+	public void RaiseEvent(object sender, EventArgs e, Action action) {
+		EventHandler wrappedAction = (sender, args) => action?.Invoke();
+		RaiseEvent(sender, e, wrappedAction);
+	}
+	
 	public void RaiseEvent(object sender, EventArgs e, EventHandler EventsEmptyAction = null) {
 		_subscribersRunning = _subscriberCount;
 		_eventHandler?.Invoke(sender, e);
-		EventsEmpty += EventsEmptyAction;
+		OnEventsEmpty += EventsEmptyAction;
 
 		CheckIfSubscribersFinished();
 	}
@@ -51,8 +55,8 @@ public class EventHandlerCustom {
 
 	void CheckIfSubscribersFinished() {
 		if (_subscribersRunning == 0) {
-			EventsEmpty?.Invoke(this, EventArgs.Empty);
-			EventsEmpty = null;
+			OnEventsEmpty?.Invoke(this, EventArgs.Empty);
+			OnEventsEmpty = null;
 		}
 	}
 }
