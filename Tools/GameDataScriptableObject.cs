@@ -12,7 +12,7 @@ public class GameDataScriptableObject<T> where T : ScriptableObject {
 	}
     
 	public T GetConfig(string id) {
-		return _array[id];
+		return _array.ContainsKey(id) ? _array[id] : null;
 	}
 	
 	public List<T> GetList() {

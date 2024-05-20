@@ -68,9 +68,10 @@ public class ObjectPoolMgr {
 
 	public void ReuseObject(GameObject prefab, GameObject createdObj) {
 		createdObj.SetActive(false);
+		int instanceID = prefab.GetInstanceID();
 		
 		Task.Delay(100).ContinueWith(o => {
-			if (mCreatedObjects.TryGetValue(prefab.GetInstanceID(), out Queue<GameObject> createdObjects)) {
+			if (mCreatedObjects.TryGetValue(instanceID, out Queue<GameObject> createdObjects)) {
 				createdObjects.Enqueue(createdObj);
 			}
 		});
