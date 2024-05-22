@@ -19,6 +19,11 @@ public class BaseGameDataMgr {
         LoadData();
     }
     
+    public static void Init() {
+        instance = new BaseGameDataMgr();
+        
+    }
+    
     protected virtual void LoadData() {
         DataHolderGameData.Instance.LoadDataHolderGameData();
         

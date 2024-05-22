@@ -1,13 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArrayWithFreeIndex<T> where T : new() {
+public class ArrayWithFreeIndex<T> {
 	List<T> array = new List<T>();
 	List<int> freeIndexs = new List<int>();
 
-	public void FreeIndex(int index) {
-		array[index] = default(T);
+	public void FreeIndex(int index, T value) {
+		array[index] = value;
 		freeIndexs.Add(index);
 	}
 
