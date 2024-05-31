@@ -22,6 +22,7 @@ public class AudioManager : MonoBehaviour {
     bool mMuteMusic;
     float mSoundVolume;
     float mMusicVolume;
+    float musicReduction = 0.2f;
 
     // Audio Manager doesn't exist - create it
     private static void Create() {
@@ -75,11 +76,11 @@ public class AudioManager : MonoBehaviour {
                     return;
 
                 mMusic.DOKill();
-                mMusic.volume = fadeStart * mMusicVolume;
+                mMusic.volume = fadeStart * mMusicVolume * musicReduction;
 
                 mMusic.volume = mMusic.volume;
                 mMusic.Play();
-                mMusic.DOFade(mMusicVolume, fadeDuration);
+                mMusic.DOFade(mMusicVolume * musicReduction, fadeDuration);
             }
         }
     }
@@ -103,7 +104,7 @@ public class AudioManager : MonoBehaviour {
 
         if (mMusic != null) {
             mMusic.DOKill();
-            mMusic.volume = mMusicVolume;
+            mMusic.volume = mMusicVolume * musicReduction;
         }
     }
 
