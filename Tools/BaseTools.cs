@@ -91,6 +91,18 @@ public static class BaseTools {
 
 		return false;
 	}
+	
+	public static void WriteToFile(string file, byte[] bytes, bool writeIfFileExists) {
+		if (!writeIfFileExists && File.Exists(file)) {
+			return;
+		}
+        File.WriteAllBytes(file, bytes);
+	}
+	
+	public static byte[] ReadFile(string file) {
+		if (!File.Exists(file)) return Array.Empty<byte>();
+		return File.ReadAllBytes(file);
+	}
 
     public static void WriteToFile(string file, string text, bool writeIfFileExists) {
         if (!writeIfFileExists && File.Exists(file)) {

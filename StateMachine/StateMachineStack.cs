@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Sirenix.Serialization;
 using UnityEngine;
 
+[Serializable]
 public class StateMachineStack : StateMachine {
-	List<IState> nextStates = new List<IState>();
+	[OdinSerialize] List<IState> nextStates = new List<IState>();
 	bool mLog = false;
 
 	public void AddState(IState nextState) {

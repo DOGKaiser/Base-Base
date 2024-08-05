@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Sirenix.Serialization;
 using UnityEngine;
 
 public class StateMachineQueue : StateMachine {
-	List<IState> nextStates = new List<IState>();
+	[OdinSerialize] List<IState> nextStates = new List<IState>();
 
 	public void AddState(IState nextState) {
 		nextStates.Add(nextState);
