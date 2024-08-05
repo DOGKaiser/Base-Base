@@ -2,9 +2,9 @@ using System;
 
 public class EventHandlerCustom {
 
-	private EventHandler _eventHandler;
+	private event EventHandler _eventHandler;
 	
-	public EventHandler OnEventsEmpty;
+	public event EventHandler OnEventsEmpty;
 
 	// Counter to keep track of the number of subscribers
 	private int _subscriberCount = 0;
