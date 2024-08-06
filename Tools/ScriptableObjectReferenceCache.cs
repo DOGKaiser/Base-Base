@@ -4,15 +4,19 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [CreateAssetMenu(menuName = "Match/ScriptableObjectReferenceCache")]
 public class ScriptableObjectReferenceCache : ScriptableObject, IExternalStringReferenceResolver {
     [FolderPath(RequireExistingPath = true)]
     [SerializeField] private string[] foldersToSearchIn;
 
+#if UNITY_EDITOR
     [InlineButton(nameof(ClearReferences))] [InlineButton(nameof(FetchReferences))] [LabelWidth(140)] [PropertySpace(10)]
+#endif
     [SerializeField] private bool autoFetchInPlaymode = true;
     
     [ReadOnly]
